@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+git remote add origin https://github.com/UPRES-GUAVIARE/HOLA-MUNDO.git
+git branch -M main
+git push -u origin main
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digiturno</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f3f3f3;
+        }
+        .button {
+            padding: 15px 30px;
+            font-size: 18px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        #turno {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bienvenido al Sistema Digiturno</h1>
+    <p>Haga clic en el botón para generar su turno</p>
+    <button class="button" onclick="generarTurno()">Generar Turno</button>
+    <div id="turno"></div>
+
+    <script>
+        let turnoActual = 0;
+
+        function generarTurno() {
+            turnoActual++;
+            document.getElementById('turno').innerText = Su turno es: ${turnoActual};
+        }
+    </script>
+</body>
+</html>
+
