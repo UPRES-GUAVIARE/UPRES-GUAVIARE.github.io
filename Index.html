@@ -1,153 +1,38 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digiturno</title>
-    <style>
-        /* Estilo general */
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-            margin: 0;
-            background-color: #f9f9f9;
-        }
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-        h1 {
-            color: #007BFF;
-            font-size: 2rem;
-        }
+const app = express();
+app.use(bodyParser.json());
+app.use(cors());
 
-        .input {
-            padding: 10px;
-            font-size: 16px;
-            width: 80%;
-            max-width: 300px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+// Almacenamiento en memoria
+let turnos = [];
 
-        .button {
-            padding: 15px 30px;
-            font-size: 18px;
-            color: white;
-            background-color: #007BFF;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
+// Ruta para guardar un turno
+app.post("/api/turnos", (req, res) => {
+    const { nombre, turno } = req.body;
+    if (!nombre || !turno) {
+        return res.status(400).json({ message: "Faltan datos." });
+    }
+    turnos.push({ nombre, turno });
+    return res.status(201).json({ message: "Turno registrado exitosamente." });
+});
 
-        #turno {
-            margin-top: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #333;
-        }
+// Ruta para obtener todos los turnos
+app.get("/api/turnos", (req, res) => {
+    res.json(turnos);
+});
 
-        table {
-            margin: 20px auto;
-            border-collapse: collapse;
-            width: 80%;
-            max-width: 600px;
-        }
+// Ruta para eliminar un turno específico
+app.delete("/api/turnos/:turno", (req, res) => {
+    const turno = parseInt(req.params.turno, 10);
+    turnos = turnos.filter(t => t.turno !== turno);
+    res.json({ message: `Turno ${turno} eliminado.` });
+});
 
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ccc;
-        }
-
-        th {
-            background-color: #007BFF;
-            color: white;
-        }
-    </style>
-</head>
-<body>
-    <h1>Sistema Digiturno</h1>
-    <p>Ingrese su nombre y presione el botón para generar su turno</p>
-    <input id="nombre" class="input" type="text" placeholder="Escriba su nombre aquí">
-    <button class="button" onclick="generarTurno()">Generar Turno</button>
-    <div id="turno"></div>
-
-    <h2>Turnos Generados</h2>
-    <table>
-        <thead>
-            <tr>
-                <th># Turno</th>
-                <th>Nombre</th>
-            </tr>
-        </thead>
-        <tbody id="tabla-turnos">
-            <!-- Los turnos aparecerán aquí -->
-        </tbody>
-    </table>
-
-    <script>
-        // Variables globales
-        let turnoActual = localStorage.getItem("turnoActual")
-            ? parseInt(localStorage.getItem("turnoActual"))
-            : 0;
-
-        // Mostrar turnos al cargar la página
-        document.addEventListener("DOMContentLoaded", cargarTurnos);
-
-        // Generar un nuevo turno
-        async function generarTurno() {
-            const nombre = document.getElementById('nombre').value.trim();
-            if (!nombre) {
-                alert("Por favor, ingrese su nombre.");
-                return;
-            }
-
-            turnoActual++;
-            localStorage.setItem("turnoActual", turnoActual);
-
-            try {
-                //const response = await fetch("http://localhost:3000/api/turnos", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ nombre, turno: turnoActual })
-            }
-
-                if (response.ok) {
-                    document.getElementById('turno').innerText = `Turno ${turnoActual}: ${nombre}`;
-                    document.getElementById('nombre').value = ""; // Limpiar campo
-                    cargarTurnos(); // Actualizar la tabla
-               } else {
-                    const error = await response.json();
-                    alert(error.message);
-                }
-            } catch (error) {
-              alert("Error al conectar con el servidor.");
-            }
-        }
-
-        // Cargar turnos en la tabla
-        async function cargarTurnos() {
-            try {
-                const response = await fetch("http://localhost:3000/api/turnos");
-                const turnos = await response.json();
-
-                const tabla = document.getElementById("tabla-turnos");
-                tabla.innerHTML = ""; // Limpiar la tabla
-
-                turnos.forEach(({ turno, nombre }) => {
-                    const fila = document.createElement("tr");
-                    fila.innerHTML = `
-                        <td>${turno}</td>
-                        <td>${nombre}</td>
-                    `;
-                    tabla.appendChild(fila);
-                });
-            } catch (error) {
-                console.error("Error al cargar los turnos:", error);
-            }
-        }
-    </script>
-</body>
-</html>
+// Iniciar el servidor
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en [http://localhost:${PORT}`)]http://localhost:${PORT}`);
+});
