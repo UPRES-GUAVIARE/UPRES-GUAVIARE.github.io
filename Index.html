@@ -3,62 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digiturno Sanidad Guaviare</title>
+    <title>Digiturno</title>
     <style>
+        /* Diseño general */
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 20px;
-            background-color: #f3f3f3;
+            margin: 0;
+            background-color: #f9f9f9;
         }
+
+        h1 {
+            color: #007BFF;
+            font-size: 2rem;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        /* Botón */
         .button {
             padding: 15px 30px;
             font-size: 18px;
             color: white;
             background-color: #007BFF;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .button:hover {
             background-color: #0056b3;
         }
+
+        .button:active {
+            transform: scale(0.95);
+        }
+
+        /* Turno */
         #turno {
             margin-top: 20px;
-            font-size: 24px;
+            font-size: 1.5rem;
+            font-weight: bold;
             color: #333;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .button {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+
+            #turno {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .button {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            #turno {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Bienvenido al Sistema Digiturno Dirección de Sanidad </h1>
-    <h1>Unidad Prestadora de Salud Guaviare</h1>
-   
-    <p>Haga clic en el botón para generar su turno</p>
+    <h1>Sistema Digiturno</h1>
+    <p>Presione el botón para generar su turno</p>
     <button class="button" onclick="generarTurno()">Generar Turno</button>
     <div id="turno"></div>
 
     <script>
+        // Recuperar turno actual de localStorage o inicializar en 0
+        let turnoActual = localStorage.getItem("turnoActual")
+            ? parseInt(localStorage.getItem("turnoActual"))
+            : 0;
 
-         let turnoActual = localStorage.getItem("turnoActual")
-        ? parseInt(localStorage.getItem("turnoActual"))
-        : 0;
+        // Mostrar el turno actual al cargar la página
+        document.addEventListener("DOMContentLoaded", () => {
+            const turnoDiv = document.getElementById('turno');
+            turnoDiv.innerText = turnoActual > 0
+                ? `Último turno generado: ${turnoActual}`
+                : "No hay turnos generados aún.";
+        });
 
-    function generarTurno() {
-        turnoActual++;
-        localStorage.setItem("turnoActual", turnoActual);
-        document.getElementById('turno').innerText = `Su turno es: ${turnoActual}`;
-    }
-
-    // Mostrar turno actual al cargar la página
-    document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById('turno').innerText = turnoActual > 0
-            ? `Último turno generado: ${turnoActual}`
-            : "No hay turnos generados aún.";
-    });
-
-        
-      
+        // Función para generar un nuevo turno
+        function generarTurno() {
+            turnoActual++;
+            localStorage.setItem("turnoActual", turnoActual); // Guardar en localStorage
+            document.getElementById('turno').innerText = `Su turno es: ${turnoActual}`;
         }
     </script>
 </body>
