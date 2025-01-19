@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digiturno</title>
     <style>
-        /* Diseño general */
+        /* Estilo general */
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -19,12 +19,6 @@
             font-size: 2rem;
         }
 
-        p {
-            font-size: 1.2rem;
-            color: #555;
-        }
-
-        /* Campo de entrada */
         .input {
             padding: 10px;
             font-size: 16px;
@@ -35,7 +29,6 @@
             border-radius: 5px;
         }
 
-        /* Botón */
         .button {
             padding: 15px 30px;
             font-size: 18px;
@@ -44,19 +37,8 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .button:hover {
-            background-color: #0056b3;
-        }
-
-        .button:active {
-            transform: scale(0.95);
-        }
-
-        /* Turno */
         #turno {
             margin-top: 20px;
             font-size: 1.5rem;
@@ -78,7 +60,7 @@
             ? parseInt(localStorage.getItem("turnoActual"))
             : 0;
 
-        // Mostrar turno actual al cargar la página
+        // Mostrar el último turno al cargar la página
         document.addEventListener("DOMContentLoaded", () => {
             const turnoDiv = document.getElementById('turno');
             turnoDiv.innerText = turnoActual > 0
@@ -86,8 +68,8 @@
                 : "No hay turnos generados aún.";
         });
 
-        // Función para generar turno
-        function generarTurno() {
+        // Generar un nuevo turno
+        async function generarTurno() {
             const nombre = document.getElementById('nombre').value.trim();
             if (!nombre) {
                 alert("Por favor, ingrese su nombre.");
@@ -96,8 +78,26 @@
 
             turnoActual++;
             localStorage.setItem("turnoActual", turnoActual);
-            document.getElementById('turno').innerText = `Turno ${turnoActual}: ${nombre}`;
-            document.getElementById('nombre').value = ""; // Limpiar el campo de entrada
+
+            try {
+                const response = await fetch("http://localhost:3000/api/turnos", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ nombre, turno: turnoActual })
+                });
+
+                if (response.ok) {
+                    document.getElementById('turno').innerText = `Turno ${turnoActual}: ${nombre}`;
+                    document.getElementById('nombre').value = ""; // Limpiar campo
+                } else {
+                    const error = await response.json();
+                    alert(error.message);
+                }
+            } catch (error) {
+                alert("Error al conectar con el servidor.");
+            }
         }
     </script>
 </body>
