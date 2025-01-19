@@ -106,25 +106,25 @@
             localStorage.setItem("turnoActual", turnoActual);
 
             //try {
-               // const response = await fetch("http://localhost:3000/api/turnos", {
-                   // method: "POST",
-                    //headers: {
-                       // "Content-Type": "application/json"
-                    //},
-                   // body: JSON.stringify({ nombre, turno: turnoActual })
-               // });
+                //const response = await fetch("http://localhost:3000/api/turnos", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ nombre, turno: turnoActual })
+                
 
-                //if (response.ok) {
-                   // document.getElementById('turno').innerText = `Turno ${turnoActual}: ${nombre}`;
-                 //   document.getElementById('nombre').value = ""; // Limpiar campo
-                //    cargarTurnos(); // Actualizar la tabla
-              //  } else {
-              //      const error = await response.json();
-              //      alert(error.message);
-            //    }
-          //  } catch (error) {
-           //     alert("Error al conectar con el servidor.");
-           // }
+                if (response.ok) {
+                    document.getElementById('turno').innerText = `Turno ${turnoActual}: ${nombre}`;
+                    document.getElementById('nombre').value = ""; // Limpiar campo
+                    cargarTurnos(); // Actualizar la tabla
+               } else {
+                    const error = await response.json();
+                    alert(error.message);
+                }
+            } catch (error) {
+              alert("Error al conectar con el servidor.");
+            }
         }
 
         // Cargar turnos en la tabla
