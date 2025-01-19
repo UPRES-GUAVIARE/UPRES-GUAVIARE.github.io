@@ -23,17 +23,18 @@
             font-size: 1.2rem;
             color: #555;
         }
-        /*Campo de entrada*/
-        .input{
+
+        /* Campo de entrada */
+        .input {
             padding: 10px;
             font-size: 16px;
-            width:80%
-                max-width:300px;
-            margin-bottom:15px
-                border:1px solid #ccc
-                border-radius:5px;
-            
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
+
         /* Botón */
         .button {
             padding: 15px 30px;
@@ -62,68 +63,41 @@
             font-weight: bold;
             color: #333;
         }
-
-        /* Responsivo */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            p {
-                font-size: 1rem;
-            }
-
-            .button {
-                padding: 12px 20px;
-                font-size: 16px;
-            }
-
-            #turno {
-                font-size: 1.3rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            .button {
-                padding: 10px 15px;
-                font-size: 14px;
-            }
-
-            #turno {
-                font-size: 1.2rem;
-            }
-        }
     </style>
 </head>
 <body>
     <h1>Sistema Digiturno</h1>
-    <p>Presione el botón para generar su turno</p>
+    <p>Ingrese su nombre y presione el botón para generar su turno</p>
+    <input id="nombre" class="input" type="text" placeholder="Escriba su nombre aquí">
     <button class="button" onclick="generarTurno()">Generar Turno</button>
     <div id="turno"></div>
 
     <script>
-        // Recuperar turno actual de localStorage o inicializar en 0
+        // Variables globales
         let turnoActual = localStorage.getItem("turnoActual")
             ? parseInt(localStorage.getItem("turnoActual"))
             : 0;
 
-        // Mostrar el turno actual al cargar la página
+        // Mostrar turno actual al cargar la página
         document.addEventListener("DOMContentLoaded", () => {
             const turnoDiv = document.getElementById('turno');
             turnoDiv.innerText = turnoActual > 0
-                ? `Último turno generado: ${turnoActual}`
+                ? `Último turno generado: Turno ${turnoActual}`
                 : "No hay turnos generados aún.";
         });
 
-        // Función para generar un nuevo turno
+        // Función para generar turno
         function generarTurno() {
+            const nombre = document.getElementById('nombre').value.trim();
+            if (!nombre) {
+                alert("Por favor, ingrese su nombre.");
+                return;
+            }
+
             turnoActual++;
-            localStorage.setItem("turnoActual", turnoActual); // Guardar en localStorage
-            document.getElementById('turno').innerText = `Su turno es: ${turnoActual}`;
+            localStorage.setItem("turnoActual", turnoActual);
+            document.getElementById('turno').innerText = `Turno ${turnoActual}: ${nombre}`;
+            document.getElementById('nombre').value = ""; // Limpiar el campo de entrada
         }
     </script>
 </body>
