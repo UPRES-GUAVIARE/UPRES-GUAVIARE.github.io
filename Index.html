@@ -105,14 +105,14 @@
             turnoActual++;
             localStorage.setItem("turnoActual", turnoActual);
 
-            //try {
+            try {
                 //const response = await fetch("http://localhost:3000/api/turnos", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({ nombre, turno: turnoActual })
-                
+            }
 
                 if (response.ok) {
                     document.getElementById('turno').innerText = `Turno ${turnoActual}: ${nombre}`;
