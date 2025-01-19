@@ -45,6 +45,24 @@
             font-weight: bold;
             color: #333;
         }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -54,19 +72,27 @@
     <button class="button" onclick="generarTurno()">Generar Turno</button>
     <div id="turno"></div>
 
+    <h2>Turnos Generados</h2>
+    <table>
+        <thead>
+            <tr>
+                <th># Turno</th>
+                <th>Nombre</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-turnos">
+            <!-- Los turnos aparecerán aquí -->
+        </tbody>
+    </table>
+
     <script>
         // Variables globales
         let turnoActual = localStorage.getItem("turnoActual")
             ? parseInt(localStorage.getItem("turnoActual"))
             : 0;
 
-        // Mostrar el último turno al cargar la página
-        document.addEventListener("DOMContentLoaded", () => {
-            const turnoDiv = document.getElementById('turno');
-            turnoDiv.innerText = turnoActual > 0
-                ? `Último turno generado: Turno ${turnoActual}`
-                : "No hay turnos generados aún.";
-        });
+        // Mostrar turnos al cargar la página
+        document.addEventListener("DOMContentLoaded", cargarTurnos);
 
         // Generar un nuevo turno
         async function generarTurno() {
@@ -80,23 +106,46 @@
             localStorage.setItem("turnoActual", turnoActual);
 
             //try {
-              //  const response = await fetch("http://localhost:3000/api/turnos", {
-                //    method: "POST",
-                  //  headers: {
-                    //    "Content-Type": "application/json"
+               // const response = await fetch("http://localhost:3000/api/turnos", {
+                   // method: "POST",
+                    //headers: {
+                       // "Content-Type": "application/json"
                     //},
-                    //body: JSON.stringify({ nombre, turno: turnoActual })
-                //});
+                   // body: JSON.stringify({ nombre, turno: turnoActual })
+               // });
 
                 //if (response.ok) {
-                  //  document.getElementById('turno').innerText = `Turno ${turnoActual}: ${nombre}`;
-                   // document.getElementById('nombre').value = ""; // Limpiar campo
-                //} else {
-                  //  const error = await response.json();
-                   // alert(error.message);
-                //}
+                   // document.getElementById('turno').innerText = `Turno ${turnoActual}: ${nombre}`;
+                 //   document.getElementById('nombre').value = ""; // Limpiar campo
+                //    cargarTurnos(); // Actualizar la tabla
+              //  } else {
+              //      const error = await response.json();
+              //      alert(error.message);
+            //    }
+          //  } catch (error) {
+           //     alert("Error al conectar con el servidor.");
+           // }
+        }
+
+        // Cargar turnos en la tabla
+        async function cargarTurnos() {
+            try {
+                const response = await fetch("http://localhost:3000/api/turnos");
+                const turnos = await response.json();
+
+                const tabla = document.getElementById("tabla-turnos");
+                tabla.innerHTML = ""; // Limpiar la tabla
+
+                turnos.forEach(({ turno, nombre }) => {
+                    const fila = document.createElement("tr");
+                    fila.innerHTML = `
+                        <td>${turno}</td>
+                        <td>${nombre}</td>
+                    `;
+                    tabla.appendChild(fila);
+                });
             } catch (error) {
-                alert("Error al conectar con el servidor.");
+                console.error("Error al cargar los turnos:", error);
             }
         }
     </script>
