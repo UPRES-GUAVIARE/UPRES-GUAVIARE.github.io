@@ -1,38 +1,136 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digiturno Local</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
 
-const app = express();
-app.use(bodyParser.json());
-app.use(cors());
+        h1 {
+            color: #007BFF;
+        }
 
-// Almacenamiento en memoria
-let turnos = [];
+        .input {
+            padding: 10px;
+            font-size: 16px;
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-// Ruta para guardar un turno
-app.post("/api/turnos", (req, res) => {
-    const { nombre, turno } = req.body;
-    if (!nombre || !turno) {
-        return res.status(400).json({ message: "Faltan datos." });
-    }
-    turnos.push({ nombre, turno });
-    return res.status(201).json({ message: "Turno registrado exitosamente." });
-});
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
 
-// Ruta para obtener todos los turnos
-app.get("/api/turnos", (req, res) => {
-    res.json(turnos);
-});
+        .button:hover {
+            background-color: #0056b3;
+        }
 
-// Ruta para eliminar un turno específico
-app.delete("/api/turnos/:turno", (req, res) => {
-    const turno = parseInt(req.params.turno, 10);
-    turnos = turnos.filter(t => t.turno !== turno);
-    res.json({ message: `Turno ${turno} eliminado.` });
-});
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+            max-width: 600px;
+        }
 
-// Iniciar el servidor
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en [http://localhost:${PORT}`)]http://localhost:${PORT}`);
-});
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .delete-button {
+            padding: 5px 10px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #a71d2a;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sistema Digiturno</h1>
+    <p>Ingrese su nombre para generar un turno</p>
+    <input id="nombre" class="input" type="text" placeholder="Escriba su nombre aquí">
+    <button class="button" onclick="generarTurno()">Generar Turno</button>
+    <h2>Turnos Generados</h2>
+    <table>
+        <thead>
+            <tr>
+                <th># Turno</th>
+                <th>Nombre</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-turnos">
+            <!-- Los turnos aparecerán aquí -->
+        </tbody>
+    </table>
+
+    <script>
+        // Variables globales
+        let turnoActual = 0;
+        const tablaTurnos = document.getElementById("tabla-turnos");
+
+        // Generar un nuevo turno
+        function generarTurno() {
+            const nombreInput = document.getElementById("nombre");
+            const nombre = nombreInput.value.trim();
+
+            if (!nombre) {
+                alert("Por favor, ingrese un nombre.");
+                return;
+            }
+
+            turnoActual++;
+
+            // Crear una nueva fila en la tabla
+            const nuevaFila = document.createElement("tr");
+            nuevaFila.innerHTML = `
+                <td>${turnoActual}</td>
+                <td>${nombre}</td>
+                <td><button class="delete-button" onclick="eliminarTurno(this)">Eliminar</button></td>
+            `;
+
+            // Agregar la fila a la tabla
+            tablaTurnos.appendChild(nuevaFila);
+
+            // Limpiar el campo de entrada
+            nombreInput.value = "";
+        }
+
+        // Eliminar un turno de la tabla
+        function eliminarTurno(boton) {
+            const fila = boton.parentElement.parentElement; // Obtener la fila
+            tablaTurnos.removeChild(fila); // Eliminar la fila de la tabla
+        }
+    </script>
+</body>
+</html>
