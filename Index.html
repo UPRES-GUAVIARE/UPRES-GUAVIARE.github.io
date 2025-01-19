@@ -39,11 +39,26 @@
     <div id="turno"></div>
 
     <script>
-        let turnoActual = 0;
 
-        function generarTurno() {
-            turnoActual++;
-            document.getElementById('turno').innerText = Su turno es: ${turnoActual};
+         let turnoActual = localStorage.getItem("turnoActual")
+        ? parseInt(localStorage.getItem("turnoActual"))
+        : 0;
+
+    function generarTurno() {
+        turnoActual++;
+        localStorage.setItem("turnoActual", turnoActual);
+        document.getElementById('turno').innerText = `Su turno es: ${turnoActual}`;
+    }
+
+    // Mostrar turno actual al cargar la página
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('turno').innerText = turnoActual > 0
+            ? `Último turno generado: ${turnoActual}`
+            : "No hay turnos generados aún.";
+    });
+
+        
+      
         }
     </script>
 </body>
